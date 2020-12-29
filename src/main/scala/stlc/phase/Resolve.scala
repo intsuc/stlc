@@ -28,17 +28,24 @@ object Resolve extends (P => R):
 
     // R-If
     case P.Exp.If(antecedent, consequent, alternative) =>
-      R.Exp.If(visit(antecedent), visit(consequent), visit(alternative))
+      val antecedent1 = visit(antecedent)
+      val consequent1 = visit(consequent)
+      val alternative1 = visit(alternative)
+      R.Exp.If(antecedent1, consequent1, alternative1)
 
     // R-Abs
     case P.Exp.Abs(parameter, body) =>
       val parameter1 = Sym.fresh()
-      R.Exp.Abs(parameter1, visit(body)(using ctx + (parameter -> parameter1)))
+      val body1 = visit(body)(using ctx + (parameter -> parameter1))
+      R.Exp.Abs(parameter1, body1)
 
     // R-App
     case P.Exp.App(operator, operand) =>
-      R.Exp.App(visit(operator), visit(operand))
+      val operator1 = visit(operator)
+      val operand1 = visit(operand)
+      R.Exp.App(operator1, operand1)
 
     // R-Anno
     case P.Exp.Anno(target, annotation) =>
-      R.Exp.Anno(visit(target), annotation)
+      val target1 = visit(target)
+      R.Exp.Anno(target1, annotation)
