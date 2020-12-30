@@ -10,32 +10,32 @@ object Defunctionalize extends (T => D):
   private def visit(exp: T.Exp): (D.Exp, D.Ctx) =
     exp match
 
-    // D-Var
+    // Var
     case T.Exp.Var(name) =>
       (D.Exp.Var(name), Seq.empty)
 
-    // D-True
+    // True
     case T.Exp.True =>
       (D.Exp.True, Seq.empty)
 
-    // D-False
+    // False
     case T.Exp.False =>
       (D.Exp.False, Seq.empty)
 
-    // D-If
+    // If
     case T.Exp.If(antecedent, consequent, alternative) =>
       val (antecedent1, ctx1) = visit(antecedent)
       val (consequent1, ctx2) = visit(consequent)
       val (alternative1, ctx3) = visit(alternative)
       (D.Exp.If(antecedent1, consequent1, alternative1), ctx1 ++ ctx2 ++ ctx3)
 
-    // D-Abs
+    // Abs
     case exp @ T.Exp.Abs(parameter, body) =>
       val (body1, ctx1) = visit(body)
       val data1 = fv(exp)
       (D.Exp.Clos(parameter, data1), (parameter, data1, body1) +: ctx1)
 
-    // D-App
+    // App
     case T.Exp.App(operator, operand) =>
       val (operator1, ctx1) = visit(operator)
       val (operand1, ctx2) = visit(operand)
