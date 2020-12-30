@@ -17,8 +17,11 @@ object Parse extends (String => P):
     import P._
 
     lazy val typ: PackratParser[Typ]
-      = typ ~ "→" ~ typ ^^ { case domain ~ _ ~ codomain => Typ.Fun(domain, codomain) }
-      | "bool" ^^ { _ => Typ.Bool }
+      = typ ~ rep1("→" ~> typ) ^^ { case head ~ tail => (head +: tail).reduceRight(Typ.Fun(_, _)) }
+      | typ1
+
+    lazy val typ1: PackratParser[Typ]
+      = "bool" ^^ { _ => Typ.Bool }
       | "(" ~> typ <~ ")"
 
     lazy val exp: PackratParser[Exp]
