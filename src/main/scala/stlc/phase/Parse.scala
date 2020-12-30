@@ -43,4 +43,6 @@ object Parse extends (String => P):
       | name ^^ { Exp.Var(_) }
       | "(" ~> exp <~ ")"
 
-    def name: Parser[String] = """[a-z0-9_.-]+""".r
+    def keyword: Parser[String] = "bool" | "if" | "then" | "else" | "true" | "false"
+
+    def name: Parser[String] = not(keyword) ~> """[a-z0-9_.-]+""".r
