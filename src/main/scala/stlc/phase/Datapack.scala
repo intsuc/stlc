@@ -7,7 +7,7 @@ import scala.util.Using
 
 object Datapack extends (D => (Path => Unit)):
   def apply(defunctionalized: D): Path => Unit =
-    path => Using(ZipOutputStream(Files.newOutputStream(path.getParent.resolve("out.zip")))) { out =>
+    path => Using(ZipOutputStream(Files.newOutputStream(path))) { out =>
       out.write("pack.mcmeta", Seq("""{"pack": {"description": "", "pack_format": 7}}"""))
 
       out.write("data/minecraft/functions/apply.mcfunction",
