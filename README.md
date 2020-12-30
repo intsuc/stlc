@@ -41,11 +41,11 @@ Expression <i>e</i> ::= <i>x</i>
 ──────────────── Var
 <i>Γ</i>, <i>x</i> : <i>τ</i> ⊢ <i>x</i> : <i>τ</i>
 
-──────────── True
-<i>Γ</i> ⊢ true : <i>τ</i>
+─────────────── True
+<i>Γ</i> ⊢ true : bool
 
-───────────── False
-<i>Γ</i> ⊢ false : <i>τ</i>
+──────────────── False
+<i>Γ</i> ⊢ false : bool
 
 <i>Γ</i> ⊢ <i>e<sub>1</sub></i> : bool    <i>Γ</i> ⊢ <i>e<sub>2</sub></i> : <i>τ</i>    <i>Γ</i> ⊢ <i>e<sub>3</sub></i> : <i>τ</i>
 ───────────────────────────────────────── If
