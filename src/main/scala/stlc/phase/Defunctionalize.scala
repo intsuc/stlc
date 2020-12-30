@@ -43,7 +43,7 @@ object Defunctionalize extends (T => D):
 
   private def fv(exp: T.Exp): Set[Sym] =
     exp match
-    case T.Exp.Var(name) => Set.empty
+    case T.Exp.Var(name) => Set(name)
     case T.Exp.True => Set.empty
     case T.Exp.False => Set.empty
     case T.Exp.If(antecedent, consequent, alternative) => fv(antecedent) ++ fv(consequent) ++ fv(alternative)
