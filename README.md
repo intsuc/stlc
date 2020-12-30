@@ -8,6 +8,12 @@ Proof of concept for simply typed lambda calculus compiler for Minecraft.
 sbt> run <i>input_path</i> <i>output_path</i>
 </pre>
 
+## Example
+
+```agda
+((x → y → (if x then (if y then true else false) else false)) : bool → bool → bool) true false
+```
+
 ## Language
 
 ### Syntax
