@@ -10,20 +10,20 @@ object Type extends (R => T):
   private def check(exp: R.Exp, typ: T.Typ)(using ctx: T.Ctx): T.Exp =
     (exp, typ) match
 
-    // True⇐
+    // T-True⇐
     case (R.Exp.True, T.Typ.Bool) =>
       T.Exp.True
 
-    // False⇐
+    // T-False⇐
     case (R.Exp.False, T.Typ.Bool) =>
       T.Exp.False
 
-    // Abs⇐
+    // T-Abs⇐
     case (R.Exp.Abs(parameter, body), T.Typ.Fun(domain, codomain)) =>
       val body1 = check(body, codomain)(using ctx + (parameter -> domain))
       T.Exp.Abs(parameter, body1)
 
-    // Sub⇐
+    // T-Sub⇐
     case _ =>
       val (exp1, typ1) = synth(exp)
       if typ1 == typ then
@@ -34,26 +34,26 @@ object Type extends (R => T):
   private def synth(exp: R.Exp)(using ctx: T.Ctx): (T.Exp, T.Typ) =
     exp match
 
-    // Var⇒
+    // T-Var⇒
     case R.Exp.Var(name) =>
       (T.Exp.Var(name), ctx(name))
 
-    // True⇒
+    // T-True⇒
     case R.Exp.True =>
       (T.Exp.True, T.Typ.Bool)
 
-    // False⇒
+    // T-False⇒
     case R.Exp.False =>
       (T.Exp.False, T.Typ.Bool)
 
-    // If⇒
+    // T-If⇒
     case R.Exp.If(antecedent, consequent, alternative) =>
       val antecedent1 = check(antecedent, T.Typ.Bool)
       val (consequent1, typ) = synth(consequent)
       val alternative1 = check(alternative, typ)
       (T.Exp.If(antecedent1, consequent1, alternative1), typ)
 
-    // App⇒
+    // T-App⇒
     case R.Exp.App(operator, operand) =>
       val (operator1, typ) = synth(operator)
       typ match
@@ -63,7 +63,7 @@ object Type extends (R => T):
       case typ =>
         throw CompileException(s"found type: ${typ}, required type: function type")
 
-    // Anno⇒
+    // T-Anno⇒
     case R.Exp.Anno(target, annotation) =>
       (check(target, annotation), annotation)
 
