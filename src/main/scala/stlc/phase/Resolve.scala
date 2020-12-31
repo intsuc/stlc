@@ -35,7 +35,7 @@ object Resolve extends (P => R):
 
     // R-Abs
     case P.Exp.Abs(parameter, body) =>
-      val parameter1 = Sym.fresh()
+      val parameter1 = Sym.fresh(parameter)
       val body1 = visit(body)(using ctx + (parameter -> parameter1))
       R.Exp.Abs(parameter1, body1)
 

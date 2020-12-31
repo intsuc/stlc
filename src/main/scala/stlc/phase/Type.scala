@@ -29,7 +29,7 @@ object Type extends (R => T):
       if typ1 == typ then
         exp1
       else
-        throw CompileException(s"found type: $typ1, required type: $typ")
+        throw CompileException(s"found type: ${stringify(typ1)}, required type: ${stringify(typ)}")
 
   private def synth(exp: R.Exp)(using ctx: T.Ctx): (T.Exp, T.Typ) =
     exp match
@@ -61,11 +61,26 @@ object Type extends (R => T):
         val operand1 = check(operand, domain)
         (T.Exp.App(operator1, operand1), codomain)
       case typ =>
-        throw CompileException(s"found type: ${typ}, required type: function type")
+        throw CompileException(s"found type: ${stringify(typ)}, required type: function type")
 
     // T-Anno⇒
     case R.Exp.Anno(target, annotation) =>
       (check(target, annotation), annotation)
 
     case _ =>
-      throw CompileException(s"failed to synthesize type of $exp")
+      throw CompileException(s"failed to synthesize type of ${stringify(exp)}")
+
+  private def stringify(typ: R.Typ): String =
+    typ match
+    case R.Typ.Bool => "bool"
+    case R.Typ.Fun(domain, codomain) => s"${stringify(domain)} → ${stringify(codomain)}"
+
+  private def stringify(exp: R.Exp): String =
+    exp match
+    case R.Exp.Var(name) => name.name
+    case R.Exp.True => "true"
+    case R.Exp.False => "false"
+    case R.Exp.If(antecedent, consequent, alternative) => s"if ${stringify(antecedent)} then ${stringify(consequent)} else ${stringify(alternative)}"
+    case R.Exp.Abs(parameter, body) => s"${parameter.name} → ${stringify(body)}"
+    case R.Exp.App(operator, operand) => s"${stringify(operator)} ${stringify(operand)}"
+    case R.Exp.Anno(target, annotation) => s"${stringify(target)} : ${stringify(annotation)}"

@@ -1,8 +1,8 @@
 package stlc.ast
 
-final case class Sym private (id: Int)
+final case class Sym private (name: String, id: Int)
 
 object Sym:
   private val Id = java.util.concurrent.atomic.AtomicInteger()
 
-  def fresh(): Sym = Sym(Id.getAndIncrement())
+  def fresh(name: String): Sym = Sym(name, Id.getAndIncrement())

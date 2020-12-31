@@ -24,7 +24,7 @@ object Datapack extends (D => (Path => Unit)):
       }
 
       out.write("data/minecraft/functions/preload.mcfunction", Seq("data modify storage _ stack set value []"))
-      val load = Sym.fresh()
+      val load = Sym.fresh("load")
       visit(defunctionalized.exp)(using load, Set.empty) foreach { (fun, cmds) =>
         out.write(s"data/minecraft/functions/${fun.id}.mcfunction", cmds)
       }
@@ -52,8 +52,8 @@ object Datapack extends (D => (Path => Unit)):
 
     // If
     case D.Exp.If(antecedent, consequent, alternative) =>
-      val fun1 = Sym.fresh()
-      val fun2 = Sym.fresh()
+      val fun1 = Sym.fresh(s"${fun.name}-1")
+      val fun2 = Sym.fresh(s"${fun.name}-2")
 
       val antecedent1 = visit(antecedent)
       val consequent1 = visit(consequent)(using fun1)
